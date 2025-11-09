@@ -1,0 +1,73 @@
+hydra:
+  run:
+    dir: ./experiments/${scenario}/${dataset}_${initial_increment}-${increment}
+  job:
+    chdir: true
+
+  job_logging:
+    version: 1
+    formatters:
+      simple:
+        format: '%(message)s'
+
+class_order: "imagenet_A_order.yaml"
+class_order_idx: [0,1,2]
+dataset_root: "/data/imagenet-a"
+workdir: ""
+log_path: "metric.json"
+log_suffix: "SECA"
+model_name: "ViT-B/16"
+prompt_template: "a good photo of a {}."
+
+batch_size: 64
+initial_increment: 20
+increment: ${initial_increment}
+scenario: "class"
+dataset: "imagenet_A"
+num_workers: 16
+train_batch_size: 64
+fp16: false
+seed: 2
+beta: 1 
+mix_bias: 0.7
+threshold: 0.65
+shrinkage: True
+
+text_peft_module: "prompt"
+prompt_epochs: 15
+prompt_lr: 5e-4
+prompt_weight_decay: 5e-4
+prompt_milestones: [4,10]
+prompt_optimizer: "adam"
+eval_prompt_tool: "exp_mean"
+
+text_start_block: 0
+text_end_block: 11
+
+peft_module: "adapter"
+start_block: 0
+end_block: 11 
+epochs: 10 ## 15, 20
+lr: 0.001
+lr_scale: 1.0
+milestones: [4, 8] ## [4, 10], [8, 15], [2, 5]
+ensemble_type: "seq"
+
+zero_shot: False
+many_templates: False
+
+train_text: True
+train_visual: True
+visual_first_session: False
+co_optimizer: True
+
+## loss functions
+loss_kd: True
+interm_lr: 0.001
+visual_proto: True
+post_lr: 0.001
+gaussian_sampling: False
+
+train_temperature: 20.0
+eval_temperature: 20.0
+pool_size: 5

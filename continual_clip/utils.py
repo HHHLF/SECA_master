@@ -1,0 +1,41 @@
+
+import os
+import json
+import yaml
+
+from omegaconf import DictConfig, OmegaConf
+from .classes_names import classes_name_dict
+
+def get_class_order(file_name: str, class_order_idx: int) -> list:
+    r"""TO BE DOCUMENTED"""
+    with open(file_name, "r+") as f:
+        data = yaml.safe_load(f)
+        return data["class_order_" + str(class_order_idx)]
+
+
+def get_class_ids_per_task(args):
+    yield args.class_order[:args.initial_increment]
+    for i in range(args.initial_increment, len(args.class_order), args.increment):
+        yield args.class_order[i:i + args.increment]
+
+def get_class_names(classes_names, class_ids_per_task):
+    return [classes_names[class_id] for class_id in class_ids_per_task]
+
+
+def get_dataset_class_names(workdir, dataset_name, long=False):
+    # with open(os.path.join(workdir, "dataset_reqs", f"{dataset_name}_classes.txt"), "r") as f:
+    #     lines = f.read().splitlines()
+    # return [line.split("\t")[-1] for line in lines]
+    return classes_name_dict[str(dataset_name)]["classes"]
+
+
+def save_config(config: DictConfig) -> None:
+    OmegaConf.save(config, "config.yaml")
+
+
+def get_workdir(path):
+    split_path = path.split("/")
+    workdir_idx = split_path.index("RAPF") # If a 'ValueError' occurs, replace 'RAPF' with your actual work directory
+    return "/".join(split_path[:workdir_idx+1])
+
+
