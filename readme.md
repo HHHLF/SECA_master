@@ -35,6 +35,6 @@ If you find our repo useful for your research, please consider citing our paper:
   booktitle = {Proceedings of the AAAI Conference on Artificial Intelligence},
   year      = {2026}
 }
-``
+```
 
 *All datasets may have some fluctuation due to random spliting. The results might be better by finetuning the hyper-parameters. 
